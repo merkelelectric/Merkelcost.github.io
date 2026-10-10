@@ -169,6 +169,15 @@ h1{text-wrap:balance}
 .tips details.tall>summary{font-size:1.15rem;font-weight:800;padding:2px 0 12px;border-bottom:0}
 .tips details.tall>summary::after{font-size:1.5rem}
 .tips details.tall details{margin-top:8px}
+.tourask,.tourbar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:80;max-width:536px;margin:0 auto;background:var(--card);border:1.5px solid var(--red);border-radius:14px;padding:14px;box-shadow:0 8px 28px #000a}
+.tourask[hidden],.tourbar[hidden]{display:none}
+.tourask p{margin:0 0 12px;font-weight:700;line-height:1.7}
+.tourbtns{display:flex;gap:8px}
+.tourbtns button{flex:1;font:inherit;font-weight:700;padding:11px 8px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.tourbtns button.pri{background:var(--red);border-color:var(--red);color:var(--redInk)}
+.tourbar .tt{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-weight:700}
+.tourbar progress{flex:1;height:8px;accent-color:var(--red)}
+.tourbar video{display:block;width:100%;max-height:34vh;border-radius:10px;background:#000;margin-bottom:10px}
 </style>
 </head>
 <body>
@@ -284,6 +293,15 @@ h1{text-wrap:balance}
   <p class="note" id="dethint"></p>
   <div class="detq"><span>الكمية</span><div class="step"><button type="button" id="detplus" aria-label="زيادة">+</button><input class="qty" id="detqty" type="text" inputmode="numeric" value="1" aria-label="الكمية"><button type="button" id="detminus" aria-label="تقليل">−</button></div></div>
   <button type="button" id="detadd" class="send">أضف للفاتورة</button>
+</div>
+<div id="tourask" class="tourask" hidden role="dialog" aria-label="الشرح الصوتي">
+  <p>تحب نشغّل لك شرح صوتي سريع لطريقة استخدام الموقع؟</p>
+  <div class="tourbtns"><button type="button" id="tourno">لا، شكراً</button><button type="button" id="touryes" class="pri">شغّل الشرح</button></div>
+</div>
+<div id="tourbar" class="tourbar" hidden role="region" aria-label="مشغّل الشرح">
+  <video id="tourvid" playsinline hidden></video>
+  <div class="tt"><span>الشرح الصوتي</span><progress id="tourprog" value="0" max="1"></progress></div>
+  <div class="tourbtns"><button type="button" id="tourpp">إيقاف مؤقت</button><button type="button" id="tourend">إنهاء الشرح</button></div>
 </div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script>
@@ -899,6 +917,39 @@ calc();
     h.textContent=ios?'من متصفح سفاري: اضغط زر المشاركة ثم "إضافة إلى الشاشة الرئيسية".':'من قائمة المتصفح (⋮) اختار "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية".';
   });
   try{if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(function(){});}catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var SRC=['tour.mp4','tour.mp3'],KEY='mk_tour';
+  var ask=document.getElementById('tourask'),bar=document.getElementById('tourbar'),vid=document.getElementById('tourvid'),
+      prog=document.getElementById('tourprog'),pp=document.getElementById('tourpp'),media=null;
+  if(!ask||!bar)return;
+  try{if(localStorage.getItem(KEY))return}catch(e){}
+  if(!/^https?:$/.test(location.protocol))return;
+  function remember(){try{localStorage.setItem(KEY,'1')}catch(e){}}
+  function probe(i){
+    if(i>=SRC.length)return;
+    var isV=/\.mp4$/.test(SRC[i]),m=isV?vid:new Audio();
+    m.preload='metadata';
+    m.addEventListener('loadedmetadata',function(){media=m;m._v=isV;setTimeout(function(){ask.hidden=false},700)},{once:true});
+    m.addEventListener('error',function(){probe(i+1)},{once:true});
+    m.src=SRC[i];
+  }
+  function stop(){if(media){media.pause();media.currentTime=0}bar.hidden=true;vid.hidden=true;remember()}
+  document.getElementById('tourno').onclick=function(){ask.hidden=true;remember()};
+  document.getElementById('touryes').onclick=function(){
+    ask.hidden=true;if(!media)return;
+    if(media._v)vid.hidden=false;
+    bar.hidden=false;pp.textContent='إيقاف مؤقت';
+    media.addEventListener('timeupdate',function(){if(media.duration)prog.value=media.currentTime/media.duration});
+    media.addEventListener('ended',stop);
+    var r=media.play();if(r&&r.catch)r.catch(function(){pp.textContent='شغّل'});
+  };
+  pp.onclick=function(){if(!media)return;if(media.paused){media.play();pp.textContent='إيقاف مؤقت'}else{media.pause();pp.textContent='كمّل'}};
+  document.getElementById('tourend').onclick=stop;
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!bar.hidden)stop()});
+  probe(0);
 })();
 </script>
 </body>
