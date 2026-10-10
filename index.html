@@ -70,6 +70,7 @@ h1{font-size:1.9rem;line-height:1.25}
 .sub{color:var(--mute);margin:0 0 22px;font-size:1.05rem}
 section{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:16px;margin-bottom:14px;overflow:hidden}
 h2{font-size:1.1rem;margin-bottom:12px;padding-right:10px;border-right:3px solid var(--red)}
+.howh{font-size:1.45rem;border-right-width:4px}
 .row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line);max-width:100%}
 .row>span:first-child{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:clamp(.72rem,2.6vw,1rem)}
 .row:last-child{border-bottom:0}
@@ -156,7 +157,12 @@ h1{text-wrap:balance}
 .row>span.cn .th{width:50px;height:34px}
 .row>span.cn .dot,.sg .dot{flex:0 0 12px}
 .sg .th{width:52px;height:36px}
-.tips{margin-top:18px}.tips h2{margin:0 0 10px}
+.tips{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.tips details:not(.tall){background:transparent}
+.morebox{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.aboutlnk{display:block;width:100%;text-align:center;color:var(--ink);font:inherit;font-weight:700;text-decoration:none;padding:12px;border-radius:12px;border:1px dashed var(--line);background:transparent}
+.aboutlnk:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.morebox .inst{margin:10px 0 0}.tips h2{margin:0 0 10px}
 .tips details{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:8px}
 .tips summary{cursor:pointer;padding:13px 14px;font-weight:700;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .tips summary::-webkit-details-marker{display:none}
@@ -166,13 +172,14 @@ h1{text-wrap:balance}
 .inst{display:block;width:100%;margin:18px 0 6px;padding:12px;border-radius:12px;border:1px dashed var(--line);background:transparent;color:var(--ink);font:inherit;font-weight:700;cursor:pointer}
 .insth{color:var(--mute);font-size:.9rem;line-height:1.7;margin:6px 0 0;text-align:center}
 .tips details.tall{background:transparent;border:0;margin:0}
-.tips details.tall>summary{font-size:1.15rem;font-weight:800;padding:2px 0 12px;border-bottom:0}
+.tips details.tall>summary{font-size:.98rem;font-weight:800;padding:2px 0 12px;border-bottom:0}
 .tips details.tall>summary::after{font-size:1.5rem}
 .tips details.tall details{margin-top:8px}
 .tourask,.tourbar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:80;max-width:536px;margin:0 auto;background:var(--card);border:1.5px solid var(--red);border-radius:14px;padding:14px;box-shadow:0 8px 28px #000a}
 .tourask[hidden],.tourbar[hidden]{display:none}
-.tourtop{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:10px;z-index:70;background:var(--card);color:var(--text,inherit);border:1.5px solid var(--red);border-radius:999px;padding:7px 13px;font:700 13px/1 inherit;font-family:inherit;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.tourtop{position:fixed;transition:top .2s;top:calc(10px + env(safe-area-inset-top,0px));left:10px;z-index:40;background:var(--card);color:var(--text,inherit);border:1.5px solid var(--red);border-radius:999px;padding:7px 13px;font:700 13px/1 inherit;font-family:inherit;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.18)}
 .tourtop[hidden]{display:none}
+body.minion .tourtop{top:calc(58px + env(safe-area-inset-top,0px))}
 .tourask p{margin:0 0 12px;font-weight:700;line-height:1.7}
 .tourbtns{display:flex;gap:8px}
 .tourbtns button{flex:1;font:inherit;font-weight:700;padding:11px 8px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
@@ -192,7 +199,7 @@ h1{text-wrap:balance}
 <div id="ordcnt" class="ordcnt" hidden></div>
 
 <section id="pick">
-  <h2>تحب تحسب إزاي؟</h2>
+  <h2 class="howh">تحب تحسب إزاي؟</h2>
   <div class="opts">
     <label class="opt"><input type="radio" name="mode" value="auto">أجاوب على أسئلة<small>الحاسبة تحسب لوحدها</small></label>
     <label class="opt"><input type="radio" name="mode" value="manual">أختار الأصناف بنفسي<small>أحدد الصنف والكمية</small></label>
@@ -278,8 +285,11 @@ h1{text-wrap:balance}
 <details><summary>٩. بريزة ورا الأثاث</summary><p>قبل ما تثبّت أماكن البرايز اعرف مكان السرير والدولاب والكنبة. بريزة ورا دولاب أو تحت ارتفاع الأثاث بتبقى غير مستخدمة.</p></details>
 <details><summary>١٠. بريزات المطبخ للأجهزة الكبيرة</summary><p>الثلاجة والغسالة والفرن والميكروويف محتاجين بريزات خاصة بكل جهاز. اعرف أجهزتك قبل ما تحدد عدد البريزات وأماكنها.</p></details>
 </details>
+</section>
+<section class="morebox"><a class="aboutlnk" href="about.html">من نحن – تعرّف على ميركل</a>
 <button type="button" id="instbtn" class="inst" hidden>نزّل الأداة كتطبيق على موبايلك</button><p class="insth" id="insth" hidden></p>
 </section>
+
 </main>
 
 
@@ -898,7 +908,7 @@ calc();
 (function(){
  const mini=document.getElementById('mini'),tot=document.getElementById('total'),mt=document.getElementById('minit'),app=document.getElementById('app');
  let vis=true;
- const upd=()=>{mini.classList.toggle('on',!app.hidden&&!vis&&lastTotal>0)};
+ const upd=()=>{const on=!app.hidden&&!vis&&lastTotal>0;mini.classList.toggle('on',on);document.body.classList.toggle('minion',on)};
  new MutationObserver(()=>{mt.textContent=tot.textContent;upd()}).observe(tot,{childList:true,characterData:true,subtree:true});
  new MutationObserver(upd).observe(app,{attributes:true,attributeFilter:['hidden']});
  const blk=tot.closest('.total');
